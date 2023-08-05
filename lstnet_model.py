@@ -283,12 +283,8 @@ def LSTNetModel(init, input_shape):
 
     # Get tensor shape except batchsize
     tensor_shape = input_shape[1:]
-    
-    if K.image_data_format() == 'channels_last':
-        ch_axis = 3
-    else:
-        ch_axis = 1
-    
+
+    ch_axis = 3 if K.image_data_format() == 'channels_last' else 1
     X = Input(shape = tensor_shape)
 
     # CNN
@@ -306,12 +302,12 @@ def LSTNetModel(init, input_shape):
     else:
 	# If configured not to apply CNN, copy the input
         C = X
-    
+
     # GRU
     # Apply a GRU layer (with activation set to 'relu' as per the paper) and take the returned states as result
     _, R = GRU(init.GRUUnits, activation="relu", return_sequences = False, return_state = True)(C)
     R    = Dropout(init.dropout)(R)
-    
+
     # SkipGRU
     if init.skip > 0:
 	# Calculate the number of values to use which is equal to the window divided by how many time values to skip
@@ -323,11 +319,11 @@ def LSTNetModel(init, input_shape):
 
 	# Concatenate the outputs of GRU and SkipGRU
         R    = Concatenate(axis=1)([R,S])
-    
+
     # Dense layer
     Y = Flatten()(R)
     Y = Dense(m)(Y)
-    
+
     # AR
     if init.highway > 0:
         Z = PreARTrans(init.highway)(X)
@@ -337,11 +333,8 @@ def LSTNetModel(init, input_shape):
 
 	# Generate output as the summation of the Dense layer output and the AR one
         Y = Add()([Y,Z])
-    
-    # Generate Model
-    model = Model(inputs = X, outputs = Y)
-    
-    return model
+
+    return Model(inputs = X, outputs = Y)
 
 #######################################################################################################################
 #                                                 Model End                                                           #

@@ -31,11 +31,7 @@ custom_objects = {
         }
 
 def train(model, data, init, tensorboard = None):
-    if init.validate == True:
-        val_data = (data.valid[0], data.valid[1])
-    else:
-        val_data = None
-
+    val_data = (data.valid[0], data.valid[1]) if init.validate == True else None
     start_time = datetime.now()
     history = model.fit(
                 x = data.train[0],
@@ -62,7 +58,7 @@ if __name__ == '__main__':
 
     # Initialise parameters
     lstnet_init = LSTNetInit(args)
-    
+
     # Initialise logging
     log = LogInit(logger_name, lstnet_init.logfilename, lstnet_init.debuglevel, lstnet_init.log)
     log.info("Python version: %s", sys.version)
@@ -79,7 +75,7 @@ if __name__ == '__main__':
                     lstnet_init.horizon,
                     lstnet_init.window,
                     lstnet_init.normalise)
-    
+
     # If file does not exist, then Data will not have attribute 'data'
     if hasattr(Data, 'data') is False:
         log.critical("Could not load data!! Exiting")
@@ -145,17 +141,17 @@ if __name__ == '__main__':
 
     # Prediction
     if lstnet_init.predict is not None:
-        if lstnet_init.predict == 'trainingdata' or lstnet_init.predict == 'all':
+        if lstnet_init.predict in ['trainingdata', 'all']:
             log.info("Predict training data")
             trainPredict = lstnet.predict(Data.train[0])
         else:
             trainPredict = None
-        if lstnet_init.predict == 'validationdata' or lstnet_init.predict == 'all':
+        if lstnet_init.predict in ['validationdata', 'all']:
             log.info("Predict validation data")
             validPredict = lstnet.predict(Data.valid[0])
         else:
             validPredict = None
-        if lstnet_init.predict == 'testingdata' or lstnet_init.predict == 'all':
+        if lstnet_init.predict in ['testingdata', 'all']:
             log.info("Predict testing data")
             testPredict = lstnet.predict(Data.test[0])
         else:

@@ -229,7 +229,7 @@ class LSTNetInit(object):
 def GetArguments():
     # Creating the argument parser
     parser = argparse.ArgumentParser(description='LSTNet Model')
-    
+
     parser.add_argument('--data', type=str, required=True, help='Location of the data file. Required!!')
     parser.add_argument('--window', type=int, default=24*7, help='Window size. Default=24*7')
     parser.add_argument('--horizon', type=int, default=12, help='Horizon width. Default=12')
@@ -239,7 +239,7 @@ def GetArguments():
     parser.add_argument('--SkipGRUUnits', type=int, default=5, help='Number of hidden units in the Skip GRU layer. Default=5')
     parser.add_argument('--skip', type=int, default=24,
                         help='Size of the window to skip in the Skip GRU layer. Default=24. If set to 0, the SkipGRU layer will be omitted')
-    parser.add_argument('--dropout', type=float, default=0.2, help='Dropout to be applied to layers. 0 means no dropout. Default=0.2')    
+    parser.add_argument('--dropout', type=float, default=0.2, help='Dropout to be applied to layers. 0 means no dropout. Default=0.2')
     parser.add_argument('--normalize', type=int, default=2,
                         help='0 = do not normalise, 1 = use same normalisation for all timeseries, 2 = normalise each timeseries independently. Default=2')
     parser.add_argument('--highway', type=int, default=24, help='The window size of the highway component. Default=24. If set to 0, the AR layer will be omitted')
@@ -274,7 +274,5 @@ def GetArguments():
     parser.add_argument('--debuglevel', type=int, choices=[10, 20, 30, 40, 50], default=20, help='Logging debug level. Default 20 (INFO)')
     parser.add_argument('--logfilename', type=str, default="log/lstnet", help="Filename where logging will be written. Default: log/lstnet")
 
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
